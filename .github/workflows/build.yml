@@ -1,3 +1,19 @@
+at com.google.android.libraries.mapsplatform.secrets_gradle_plugin.SecretsPlugin.apply
+```[cite: 18]
+
+المشروع يحتوي على إضافة اسمها **`secrets-gradle-plugin`** (الخاصة بمفاتيح Google Maps أو الـ API)[cite: 18]. هذه الإضافة تبحث إجبارياً أثناء التجميع عن ملف اسمه **`secrets.properties`** أو **`local.properties`**، وبما أن الملف غير موجود في المستودع تفشل عملية البناء فوراً[cite: 18].
+
+حل هذه المشكلة بسيط جداً؛ سنضيف خطوة صغيرة في `build.yml` تنشئ ملف `secrets.properties` تلقائياً قبل البناء:
+
+---
+
+### خطوات الحل:
+
+1. اضغط على خيار **`Workflow file`** من القائمة الجانبية في أقصى اليسار[cite: 18].
+2. اضغط على أيقونة القلم (✏️) للتعديل.
+3. امسح المحتوى بالكامل وضع مكانه هذا الكود:
+
+```yaml
 name: Build APK
 
 on:
@@ -18,6 +34,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
+      - name: Create secrets and local properties
+        run: |
+          touch secrets.properties
+          touch local.properties
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
