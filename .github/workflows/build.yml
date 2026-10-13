@@ -19,10 +19,12 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Create secrets and local properties
+      - name: Create secrets, env and local properties
         run: |
           touch secrets.properties
           touch local.properties
+          touch .env
+          touch .env.example
           echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Setup Gradle
