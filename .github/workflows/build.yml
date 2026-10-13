@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Create required files
+      - name: Create required files and debug keystore
         run: |
           touch secrets.properties
           touch local.properties
@@ -27,6 +27,8 @@ jobs:
           touch .env.example
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           echo "MAPS_API_KEY=dummy_key_to_bypass_errors" >> secrets.properties
+          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android,O=Android,C=US"
+          cp debug.keystore app/debug.keystore 2>/dev/null || true
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
